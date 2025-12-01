@@ -7,6 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
     fClose: VoidFunction;
@@ -16,6 +17,7 @@ interface IProps {
 
 const UpdateClientDialog = ({fClose, fOnSubmit, initialName = ''}: IProps) => {
     const [name, setName] = useState(initialName);
+    const { t } = useTranslation();
 
     const submitEnabled = name.length !== 0;
     const submitAndClose = async () => {
@@ -25,17 +27,16 @@ const UpdateClientDialog = ({fClose, fOnSubmit, initialName = ''}: IProps) => {
 
     return (
         <Dialog open={true} onClose={fClose} aria-labelledby="form-dialog-title" id="client-dialog">
-            <DialogTitle id="form-dialog-title">Update a Client</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('updateClient')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    A client manages messages, clients, applications and users (with admin
-                    permissions).
+                    {t('clientDescription')}
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     className="name"
-                    label="Name *"
+                    label={t('nameField')}
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -43,8 +44,8 @@ const UpdateClientDialog = ({fClose, fOnSubmit, initialName = ''}: IProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={fClose}>Cancel</Button>
-                <Tooltip title={submitEnabled ? '' : 'name is required'}>
+                <Button onClick={fClose}>{t('cancel')}</Button>
+                <Tooltip title={submitEnabled ? '' : t('nameIsRequired')}>
                     <div>
                         <Button
                             className="update"
@@ -52,7 +53,7 @@ const UpdateClientDialog = ({fClose, fOnSubmit, initialName = ''}: IProps) => {
                             onClick={submitAndClose}
                             color="primary"
                             variant="contained">
-                            Update
+                            {t('update')}
                         </Button>
                     </div>
                 </Tooltip>

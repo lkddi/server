@@ -6,6 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
     name?: string;
@@ -16,6 +17,7 @@ interface IProps {
 const RegistrationDialog = ({fClose, fOnSubmit, name: initialName = ''}: IProps) => {
     const [name, setName] = React.useState(initialName);
     const [pass, setPass] = React.useState('');
+    const { t } = useTranslation();
     const namePresent = name.length !== 0;
     const passPresent = pass.length !== 0;
 
@@ -41,14 +43,14 @@ const RegistrationDialog = ({fClose, fOnSubmit, name: initialName = ''}: IProps)
             onClose={fClose}
             aria-labelledby="form-dialog-title"
             id="add-edit-user-dialog">
-            <DialogTitle id="form-dialog-title">Registration</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('registration')}</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     id="register-username"
                     margin="dense"
                     className="name"
-                    label="Username *"
+                    label={t('usernameField')}
                     name="username"
                     value={name}
                     autoComplete="username"
@@ -62,22 +64,22 @@ const RegistrationDialog = ({fClose, fOnSubmit, name: initialName = ''}: IProps)
                     type="password"
                     value={pass}
                     fullWidth
-                    label="Password *"
+                    label={t('passwordField')}
                     name="password"
                     autoComplete="new-password"
                     onChange={handlePassChange}
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={fClose}>Cancel</Button>
+                <Button onClick={fClose}>{t('cancel')}</Button>
                 <Tooltip
                     placement={'bottom-start'}
                     title={
                         namePresent
                             ? passPresent
                                 ? ''
-                                : 'password is required'
-                            : 'username is required'
+                                : t('passwordRequired')
+                            : t('usernameRequired')
                     }>
                     <div>
                         <Button
@@ -86,7 +88,7 @@ const RegistrationDialog = ({fClose, fOnSubmit, name: initialName = ''}: IProps)
                             onClick={submitAndClose}
                             color="primary"
                             variant="contained">
-                            Register
+                            {t('register')}
                         </Button>
                     </div>
                 </Tooltip>

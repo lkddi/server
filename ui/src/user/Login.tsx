@@ -9,6 +9,7 @@ import RegistrationDialog from './Register';
 import {useStores} from '../stores';
 import {observer} from 'mobx-react-lite';
 import {useNavigate} from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const Login = observer(() => {
     const [username, setUsername] = React.useState('');
@@ -16,6 +17,7 @@ const Login = observer(() => {
     const [registerDialog, setRegisterDialog] = React.useState(false);
     const {currentUser} = useStores();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     React.useEffect(() => {
         if (currentUser.loggedIn) {
             navigate('/');
@@ -29,7 +31,7 @@ const Login = observer(() => {
                     variant="contained"
                     color="primary"
                     onClick={() => setRegisterDialog(true)}>
-                    Register
+                    {t('register')}
                 </Button>
             );
         else return null;
@@ -39,7 +41,7 @@ const Login = observer(() => {
         currentUser.login(username, password);
     };
     return (
-        <DefaultPage title="Login" rightControl={registerButton()} maxWidth={250}>
+        <DefaultPage title={t('login')} rightControl={registerButton()} maxWidth={250}>
             <Grid size={{xs: 12}} style={{textAlign: 'center'}}>
                 <Container>
                     <form onSubmit={(e) => e.preventDefault()} id="login-form">
@@ -47,7 +49,7 @@ const Login = observer(() => {
                             autoFocus
                             id="username"
                             className="name"
-                            label="Username"
+                            label={t('username')}
                             name="username"
                             margin="dense"
                             autoComplete="username"
@@ -58,7 +60,7 @@ const Login = observer(() => {
                             id="password"
                             type="password"
                             className="password"
-                            label="Password"
+                            label={t('password')}
                             name="password"
                             margin="normal"
                             autoComplete="current-password"
@@ -77,7 +79,7 @@ const Login = observer(() => {
                             style={{marginTop: 15, marginBottom: 5}}
                             loading={currentUser.authenticating}
                             onClick={login}>
-                            Login
+                            {t('login')}
                         </Button>
                     </form>
                 </Container>

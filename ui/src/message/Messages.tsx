@@ -11,10 +11,12 @@ import ConfirmDialog from '../common/ConfirmDialog';
 import LoadingSpinner from '../common/LoadingSpinner';
 import {useStores} from '../stores';
 import {Virtuoso} from 'react-virtuoso';
+import { useTranslation } from 'react-i18next';
 
 const Messages = observer(() => {
     const {id} = useParams<{id: string}>();
     const appId = id == null ? -1 : parseInt(id as string, 10);
+    const { t } = useTranslation();
 
     const [deleteAll, setDeleteAll] = React.useState(false);
     const [isLoadingMore, setLoadingMore] = React.useState(false);
@@ -61,7 +63,7 @@ const Messages = observer(() => {
             return <LoadingSpinner />;
         }
         if (hasMessages) {
-            return label("You've reached the end");
+            return label(t("endOfMessages"));
         }
         return null;
     };
@@ -77,7 +79,7 @@ const Messages = observer(() => {
             itemContent={renderMessage}
             components={{
                 Footer: messageFooter,
-                EmptyPlaceholder: () => label('No messages'),
+                EmptyPlaceholder: () => label(t('noMessages')),
             }}
         />
     );
@@ -99,7 +101,7 @@ const Messages = observer(() => {
                         color="primary"
                         onClick={() => messagesStore.refreshByApp(appId)}
                         style={{marginRight: 5}}>
-                        Refresh
+                        {t('refresh')}
                     </Button>
                     <Button
                         id="delete-all"
@@ -109,7 +111,7 @@ const Messages = observer(() => {
                         onClick={() => {
                             setDeleteAll(true);
                         }}>
-                        Delete All
+                        {t('deleteAll')}
                     </Button>
                 </div>
             }>
@@ -117,8 +119,8 @@ const Messages = observer(() => {
 
             {deleteAll && (
                 <ConfirmDialog
-                    title="Confirm Delete"
-                    text={'Delete all messages?'}
+                    title={t('confirmDelete')}
+                    text={t('deleteAllMessages')}
                     fClose={() => setDeleteAll(false)}
                     fOnSubmit={() => messagesStore.removeByApp(appId)}
                 />

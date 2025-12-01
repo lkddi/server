@@ -24,6 +24,7 @@ import {useStores} from '../stores';
 import {observer} from 'mobx-react-lite';
 import {makeStyles} from 'tss-react/mui';
 import {ButtonBase, Tooltip} from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles()((theme) => ({
     imageContainer: {
@@ -53,6 +54,7 @@ const Applications = observer(() => {
     const [toDeleteImage, setToDeleteImage] = useState<IApplication>();
     const [toUpdateApp, setToUpdateApp] = useState<IApplication>();
     const [createDialog, setCreateDialog] = useState<boolean>(false);
+    const { t } = useTranslation();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const uploadId = useRef(-1);
@@ -78,14 +80,14 @@ const Applications = observer(() => {
 
     return (
         <DefaultPage
-            title="Applications"
+            title={t('applications')}
             rightControl={
                 <Button
                     id="create-app"
                     variant="contained"
                     color="primary"
                     onClick={() => setCreateDialog(true)}>
-                    Create Application
+                    {t('createApplication')}
                 </Button>
             }
             maxWidth={1000}>
@@ -95,11 +97,11 @@ const Applications = observer(() => {
                         <TableHead>
                             <TableRow>
                                 <TableCell padding="checkbox" style={{width: 80}} />
-                                <TableCell>Name</TableCell>
-                                <TableCell>Token</TableCell>
-                                <TableCell>Description</TableCell>
-                                <TableCell>Priority</TableCell>
-                                <TableCell>Last Used</TableCell>
+                                <TableCell>{t('name')}</TableCell>
+                                <TableCell>{t('token')}</TableCell>
+                                <TableCell>{t('description')}</TableCell>
+                                <TableCell>{t('priority')}</TableCell>
+                                <TableCell>{t('lastUsed')}</TableCell>
                                 <TableCell />
                                 <TableCell />
                             </TableRow>
@@ -151,16 +153,16 @@ const Applications = observer(() => {
             )}
             {toDeleteApp != null && (
                 <ConfirmDialog
-                    title="Confirm Delete"
-                    text={'Delete ' + toDeleteApp.name + '?'}
+                    title={t('confirmDelete')}
+                    text={t('confirmDeleteWithName', { name: toDeleteApp.name })}
                     fClose={() => setToDeleteApp(undefined)}
                     fOnSubmit={() => appStore.remove(toDeleteApp.id)}
                 />
             )}
             {toDeleteImage != null && (
                 <ConfirmDialog
-                    title="Confirm Delete Image"
-                    text={'Delete image for ' + toDeleteImage.name + '?'}
+                    title={t('confirmDeleteImage')}
+                    text={t('confirmDeleteImageWithName', { name: toDeleteImage.name })}
                     fClose={() => setToDeleteImage(undefined)}
                     fOnSubmit={() => appStore.deleteImage(toDeleteImage.id)}
                 />

@@ -16,6 +16,7 @@ import AddEditDialog from './AddEditUserDialog';
 import {IUser} from '../types';
 import {useStores} from '../stores';
 import {observer} from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 interface IRowProps {
     name: string;
@@ -24,38 +25,42 @@ interface IRowProps {
     fEdit: VoidFunction;
 }
 
-const UserRow: React.FC<IRowProps> = ({name, admin, fDelete, fEdit}) => (
-    <TableRow>
-        <TableCell>{name}</TableCell>
-        <TableCell>{admin ? 'Yes' : 'No'}</TableCell>
-        <TableCell align="right" padding="none">
-            <IconButton onClick={fEdit} className="edit" size="large">
-                <Edit />
-            </IconButton>
-            <IconButton onClick={fDelete} className="delete" size="large">
-                <Delete />
-            </IconButton>
-        </TableCell>
-    </TableRow>
-);
+const UserRow: React.FC<IRowProps> = ({name, admin, fDelete, fEdit}) => {
+    const { t } = useTranslation();
+    return (
+        <TableRow>
+            <TableCell>{name}</TableCell>
+            <TableCell>{admin ? t('yes') : t('no')}</TableCell>
+            <TableCell align="right" padding="none">
+                <IconButton onClick={fEdit} className="edit" size="large">
+                    <Edit />
+                </IconButton>
+                <IconButton onClick={fDelete} className="delete" size="large">
+                    <Delete />
+                </IconButton>
+            </TableCell>
+        </TableRow>
+    );
+};
 
 const Users = observer(() => {
     const [deleteUser, setDeleteUser] = React.useState<IUser>();
     const [editUser, setEditUser] = React.useState<IUser>();
     const [createDialog, setCreateDialog] = React.useState(false);
     const {userStore} = useStores();
+    const { t } = useTranslation();
     React.useEffect(() => void userStore.refresh(), []);
     const users = userStore.getItems();
     return (
         <DefaultPage
-            title="Users"
+            title={t('users')}
             rightControl={
                 <Button
                     id="create-user"
                     variant="contained"
                     color="primary"
                     onClick={() => setCreateDialog(true)}>
-                    Create User
+                    {t('createUser')}
                 </Button>
             }>
             <Grid size={{xs: 12}}>
@@ -63,8 +68,8 @@ const Users = observer(() => {
                     <Table id="user-table">
                         <TableHead>
                             <TableRow style={{textAlign: 'center'}}>
-                                <TableCell>Username</TableCell>
-                                <TableCell>Admin</TableCell>
+                                <TableCell>{t('username')}</TableCell>
+                                <TableCell>{t('admin')}</TableCell>
                                 <TableCell />
                             </TableRow>
                         </TableHead>
@@ -96,8 +101,8 @@ const Users = observer(() => {
             )}
             {deleteUser && (
                 <ConfirmDialog
-                    title="Confirm Delete"
-                    text={'Delete ' + deleteUser.name + '?'}
+                    title={t('confirmDelete')}
+                    text={t('confirmDeleteWithName', { name: deleteUser.name })}
                     fClose={() => setDeleteUser(undefined)}
                     fOnSubmit={() => userStore.remove(deleteUser.id)}
                 />

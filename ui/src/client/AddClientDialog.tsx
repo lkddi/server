@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
     fClose: VoidFunction;
@@ -14,6 +15,7 @@ interface IProps {
 
 const AddClientDialog = ({fClose, fOnSubmit}: IProps) => {
     const [name, setName] = useState('');
+    const { t } = useTranslation();
 
     const submitEnabled = name.length !== 0;
     const submitAndClose = async () => {
@@ -23,13 +25,13 @@ const AddClientDialog = ({fClose, fOnSubmit}: IProps) => {
 
     return (
         <Dialog open={true} onClose={fClose} aria-labelledby="form-dialog-title" id="client-dialog">
-            <DialogTitle id="form-dialog-title">Create a client</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('createClient')}</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     margin="dense"
                     className="name"
-                    label="Name *"
+                    label={t('name') + " *"}
                     type="email"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -37,8 +39,8 @@ const AddClientDialog = ({fClose, fOnSubmit}: IProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={fClose}>Cancel</Button>
-                <Tooltip placement={'bottom-start'} title={submitEnabled ? '' : 'name is required'}>
+                <Button onClick={fClose}>{t('cancel')}</Button>
+                <Tooltip placement={'bottom-start'} title={submitEnabled ? '' : t('nameIsRequired')}>
                     <div>
                         <Button
                             className="create"
@@ -46,7 +48,7 @@ const AddClientDialog = ({fClose, fOnSubmit}: IProps) => {
                             onClick={submitAndClose}
                             color="primary"
                             variant="contained">
-                            Create
+                            {t('create')}
                         </Button>
                     </div>
                 </Tooltip>

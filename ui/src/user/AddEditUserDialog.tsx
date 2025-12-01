@@ -8,6 +8,7 @@ import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
     name?: string;
@@ -27,6 +28,7 @@ const AddEditUserDialog = ({
     const [name, setName] = React.useState(initialName);
     const [pass, setPass] = React.useState('');
     const [admin, setAdmin] = React.useState(initialAdmin);
+    const { t } = useTranslation();
 
     const namePresent = name.length !== 0;
     const passPresent = pass.length !== 0 || isEdit;
@@ -41,14 +43,14 @@ const AddEditUserDialog = ({
             aria-labelledby="form-dialog-title"
             id="add-edit-user-dialog">
             <DialogTitle id="form-dialog-title">
-                {isEdit ? 'Edit ' + name : 'Add a user'}
+                {isEdit ? t('edit') + ' ' + name : t('addUser')}
             </DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     margin="dense"
                     className="name"
-                    label="Username *"
+                    label={t('username') + " *"}
                     value={name}
                     name="username"
                     id="username"
@@ -61,7 +63,7 @@ const AddEditUserDialog = ({
                     type="password"
                     value={pass}
                     fullWidth
-                    label={isEdit ? 'Password (empty if no change)' : 'Password *'}
+                    label={isEdit ? t('passwordChange') : t('password') + " *"}
                     name="password"
                     id="password"
                     onChange={(e) => setPass(e.target.value)}
@@ -75,19 +77,19 @@ const AddEditUserDialog = ({
                             value="admin"
                         />
                     }
-                    label="has administrator rights"
+                    label={t('administratorRights')}
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={fClose}>Cancel</Button>
+                <Button onClick={fClose}>{t('cancel')}</Button>
                 <Tooltip
                     placement={'bottom-start'}
                     title={
                         namePresent
                             ? passPresent
                                 ? ''
-                                : 'password is required'
-                            : 'username is required'
+                                : t('passwordRequired')
+                            : t('usernameRequired')
                     }>
                     <div>
                         <Button
@@ -96,7 +98,7 @@ const AddEditUserDialog = ({
                             onClick={submitAndClose}
                             color="primary"
                             variant="contained">
-                            {isEdit ? 'Save' : 'Create'}
+                            {isEdit ? t('save') : t('create')}
                         </Button>
                     </div>
                 </Tooltip>

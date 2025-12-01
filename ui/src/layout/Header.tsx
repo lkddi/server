@@ -14,9 +14,13 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import MenuIcon from '@mui/icons-material/Menu';
 import Apps from '@mui/icons-material/Apps';
 import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
+import Language from '@mui/icons-material/Language';
 import React, {CSSProperties} from 'react';
 import {Link} from 'react-router-dom';
 import {useMediaQuery} from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const useStyles = makeStyles()((theme: Theme) => ({
     appBar: {
@@ -86,6 +90,7 @@ const Header = ({
     showSettings,
 }: IProps) => {
     const {classes} = useStyles();
+    const { t } = useTranslation();
 
     return (
         <AppBar
@@ -96,7 +101,7 @@ const Header = ({
                 <div className={classes.title}>
                     <Link to="/" className={classes.link}>
                         <Typography variant="h5" className={classes.titleName} color="inherit">
-                            Gotify
+                            {t('appName')}
                         </Typography>
                     </Link>
                     <a
@@ -116,11 +121,11 @@ const Header = ({
                         showSettings={showSettings}
                     />
                 )}
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <LanguageSwitcher />
                     <IconButton onClick={toggleTheme} color="inherit" size="large">
                         <Highlight />
                     </IconButton>
-
                     <a
                         href="https://github.com/gotify/server"
                         className={classes.link}
@@ -150,6 +155,7 @@ const Buttons = ({
     showSettings: VoidFunction;
 }) => {
     const {classes} = useStyles();
+    const { t } = useTranslation();
 
     return (
         <div className={classes.menuButtons}>
@@ -157,22 +163,22 @@ const Buttons = ({
                 sx={{display: {sm: 'none', xs: 'block'}}}
                 icon={<MenuIcon />}
                 onClick={() => setNavOpen(true)}
-                label="menu"
+                label={t('menu')}
                 color="inherit"
             />
             {admin && (
                 <Link className={classes.link} to="/users" id="navigate-users">
-                    <ResponsiveButton icon={<SupervisorAccount />} label="users" color="inherit" />
+                    <ResponsiveButton icon={<SupervisorAccount />} label={t('users')} color="inherit" />
                 </Link>
             )}
             <Link className={classes.link} to="/applications" id="navigate-apps">
-                <ResponsiveButton icon={<Chat />} label="apps" color="inherit" />
+                <ResponsiveButton icon={<Chat />} label={t('applications')} color="inherit" />
             </Link>
             <Link className={classes.link} to="/clients" id="navigate-clients">
-                <ResponsiveButton icon={<DevicesOther />} label="clients" color="inherit" />
+                <ResponsiveButton icon={<DevicesOther />} label={t('clients')} color="inherit" />
             </Link>
             <Link className={classes.link} to="/plugins" id="navigate-plugins">
-                <ResponsiveButton icon={<Apps />} label="plugins" color="inherit" />
+                <ResponsiveButton icon={<Apps />} label={t('plugins')} color="inherit" />
             </Link>
             <ResponsiveButton
                 icon={<AccountCircle />}
@@ -183,7 +189,7 @@ const Buttons = ({
             />
             <ResponsiveButton
                 icon={<ExitToApp />}
-                label="Logout"
+                label={t('logout')}
                 onClick={logout}
                 id="logout"
                 color="inherit"
@@ -212,6 +218,69 @@ const ResponsiveButton: React.FC<{
         <Button startIcon={icon} {...rest}>
             {label}
         </Button>
+    );
+};
+
+// 定义语言配置
+const languages = [
+  { code: 'en', nativeName: 'English' },
+  { code: 'zh', nativeName: '中文简体' },
+  { code: 'zh-Hant', nativeName: '中文繁體' }
+];
+
+const LanguageSwitcher = () => {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const { i18n } = useTranslation();
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng);
+        handleClose();
+    };
+
+    return (
+        <div>
+            <IconButton
+                onClick={handleClick}
+                color="inherit"
+                size="large"
+                aria-label="change language"
+                aria-controls="language-menu"
+                aria-haspopup="true"
+            >
+                <Language />
+            </IconButton>
+            <Menu
+                id="language-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                PaperProps={{
+                    style: {
+                        width: '20ch',
+                    },
+                }}
+            >
+                {languages.map((lang) => (
+                    <MenuItem
+                        key={lang.code}
+                        onClick={() => changeLanguage(lang.code)}
+                        selected={i18n.language === lang.code || i18n.language.startsWith(lang.code.split('-')[0])}
+                    >
+                        {lang.nativeName}
+                    </MenuItem>
+                ))}
+            </Menu>
+        </div>
     );
 };
 

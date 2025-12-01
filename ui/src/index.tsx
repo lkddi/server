@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 import 'typeface-roboto';
+import './i18n/i18n'; // 引入国际化配置
 import {initAxios} from './apiAuth';
 import * as config from './config';
 import Layout from './layout/Layout';
