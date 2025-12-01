@@ -216,6 +216,14 @@ func Create(db *database.GormDatabase, vInfo *model.VersionInfo, conf *config.Co
 
 		authAdmin.POST("/:id", userHandler.UpdateUserByID)
 	}
+
+	// 管理员创建应用的路由
+	adminAppAuth := g.Group("/application/admin")
+	{
+		adminAppAuth.Use(authentication.RequireAdmin())
+		adminAppAuth.POST("", applicationHandler.CreateApplicationForUser)
+	}
+
 	return g, streamHandler.Close
 }
 
