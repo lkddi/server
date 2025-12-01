@@ -6,6 +6,7 @@ import (
 
 	"github.com/gotify/server/v2/config"
 	"github.com/gotify/server/v2/database"
+	"github.com/gotify/server/v2/i18n"
 	"github.com/gotify/server/v2/mode"
 	"github.com/gotify/server/v2/model"
 	"github.com/gotify/server/v2/router"
@@ -38,6 +39,9 @@ func main() {
 	if err := os.MkdirAll(conf.UploadedImagesDir, 0o755); err != nil {
 		panic(err)
 	}
+
+	// 初始化国际化支持
+	i18n.InitI18n()
 
 	db, err := database.New(conf.Database.Dialect, conf.Database.Connection, conf.DefaultUser.Name, conf.DefaultUser.Pass, conf.PassStrength, true)
 	if err != nil {
