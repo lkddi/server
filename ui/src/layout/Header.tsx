@@ -20,6 +20,7 @@ import React, {CSSProperties} from 'react';
 import {Link} from 'react-router';
 import {useMediaQuery} from '@mui/material';
 import {ThemeKey} from './theme';
+import * as config from '../config';
 
 const themeIcons: Record<ThemeKey, React.ReactElement> = {
     dark: <Brightness4 />,
@@ -195,13 +196,15 @@ const Buttons = ({
             <Link className={classes.link} to="/plugins" id="navigate-plugins">
                 <ResponsiveButton icon={<Apps />} label="plugins" color="inherit" />
             </Link>
-            <ResponsiveButton
-                icon={<AccountCircle />}
-                label={name}
-                onClick={showSettings}
-                id="changepw"
-                color="inherit"
-            />
+            {config.get('localAuth') && (
+                <ResponsiveButton
+                    icon={<AccountCircle />}
+                    label={name}
+                    onClick={showSettings}
+                    id="changepw"
+                    color="inherit"
+                />
+            )}
             <ResponsiveButton
                 icon={<ExitToApp />}
                 label="Logout"
