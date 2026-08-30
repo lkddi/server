@@ -14,7 +14,6 @@ import {HashRouter, Navigate, Route, Routes} from 'react-router';
 import Header from './Header';
 import Navigation from './Navigation';
 import ScrollUpButton from '../common/ScrollUpButton';
-import SettingsDialog from '../common/SettingsDialog';
 import ElevationForm from '../common/ElevationForm';
 import * as config from '../config';
 import Applications from '../application/Applications';
@@ -22,6 +21,7 @@ import Clients from '../client/Clients';
 import Plugins from '../plugin/Plugins';
 import Login from '../user/Login';
 import Messages from '../message/Messages';
+import Settings from '../user/Settings';
 import Users from '../user/Users';
 import {observer} from 'mobx-react-lite';
 import {ConnectionErrorBanner} from '../common/ConnectionErrorBanner';
@@ -76,7 +76,11 @@ const Layout = observer(() => {
     );
     const {version} = config.get('version');
     const [navOpen, setNavOpen] = React.useState(false);
-    const [showSettings, setShowSettings] = React.useState(false);
+
+    const setTheme = (next: ThemeKey) => {
+        setCurrentTheme(next);
+        localStorage.setItem(localStorageThemeKey, next);
+    };
 
     const toggleTheme = () => {
         const nextMap: Record<ThemeKey, ThemeKey> = {
@@ -84,9 +88,7 @@ const Layout = observer(() => {
             light: 'system',
             system: 'dark',
         };
-        const next = nextMap[currentTheme];
-        setCurrentTheme(next);
-        localStorage.setItem(localStorageThemeKey, next);
+        setTheme(nextMap[currentTheme]);
     };
 
     const authed = (children: React.ReactNode) => (
@@ -121,7 +123,6 @@ const Layout = observer(() => {
                                 loggedIn={loggedIn}
                                 themeMode={currentTheme}
                                 toggleTheme={toggleTheme}
-                                showSettings={() => setShowSettings(true)}
                                 logout={logout}
                                 setNavOpen={setNavOpen}
                             />
@@ -148,6 +149,15 @@ const Layout = observer(() => {
                                             path="/users"
                                             element={authed(elevated(<Users />))}
                                         />
+                                        <Route
+                                            path="/settings"
+                                            element={authed(
+                                                <Settings
+                                                    themeMode={currentTheme}
+                                                    setTheme={setTheme}
+                                                />
+                                            )}
+                                        />
                                         <Route path="/plugins" element={authed(<Plugins />)} />
                                         <Route
                                             path="/plugins/:id"
@@ -162,9 +172,6 @@ const Layout = observer(() => {
                                     </Routes>
                                 </main>
                             </div>
-                            {showSettings && (
-                                <SettingsDialog fClose={() => setShowSettings(false)} />
-                            )}
                             <ScrollUpButton />
                             <SnackbarProvider />
                         </div>

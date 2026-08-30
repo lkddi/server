@@ -120,8 +120,9 @@ describe('User', () => {
         expect(await count(page, $table.rows())).toBe(3);
     });
     it('changes password of current user', async () => {
-        const $changepw = selector.form('#changepw-dialog');
-        await page.click('#changepw');
+        const $changepw = selector.form('#changepw-form');
+        await page.click('#navigate-settings');
+        await waitForExists(page, selector.heading(), 'Settings');
         await page.waitForSelector($changepw.selector());
         await page.type($changepw.input('.newpass'), 'changed');
         await page.click($changepw.button('.change'));

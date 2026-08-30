@@ -20,7 +20,6 @@ import React, {CSSProperties} from 'react';
 import {Link} from 'react-router';
 import {useMediaQuery} from '@mui/material';
 import {ThemeKey} from './theme';
-import * as config from '../config';
 
 const themeIcons: Record<ThemeKey, React.ReactElement> = {
     dark: <Brightness4 />,
@@ -79,7 +78,6 @@ interface IProps {
     version: string;
     themeMode: ThemeKey;
     toggleTheme: VoidFunction;
-    showSettings: VoidFunction;
     logout: VoidFunction;
     style: CSSProperties;
     setNavOpen: (open: boolean) => void;
@@ -94,7 +92,6 @@ const Header = ({
     logout,
     style,
     setNavOpen,
-    showSettings,
     themeMode,
 }: IProps) => {
     const {classes} = useStyles();
@@ -125,13 +122,7 @@ const Header = ({
                     </a>
                 </div>
                 {loggedIn && (
-                    <Buttons
-                        admin={admin}
-                        name={name}
-                        logout={logout}
-                        setNavOpen={setNavOpen}
-                        showSettings={showSettings}
-                    />
+                    <Buttons admin={admin} name={name} logout={logout} setNavOpen={setNavOpen} />
                 )}
                 <div>
                     <IconButton
@@ -159,7 +150,6 @@ const Header = ({
 };
 
 const Buttons = ({
-    showSettings,
     name,
     admin,
     logout,
@@ -169,7 +159,6 @@ const Buttons = ({
     admin: boolean;
     logout: VoidFunction;
     setNavOpen: (open: boolean) => void;
-    showSettings: VoidFunction;
 }) => {
     const {classes} = useStyles();
 
@@ -196,15 +185,9 @@ const Buttons = ({
             <Link className={classes.link} to="/plugins" id="navigate-plugins">
                 <ResponsiveButton icon={<Apps />} label="plugins" color="inherit" />
             </Link>
-            {config.get('localAuth') && (
-                <ResponsiveButton
-                    icon={<AccountCircle />}
-                    label={name}
-                    onClick={showSettings}
-                    id="changepw"
-                    color="inherit"
-                />
-            )}
+            <Link className={classes.link} to="/settings" id="navigate-settings">
+                <ResponsiveButton icon={<AccountCircle />} label={name} color="inherit" />
+            </Link>
             <ResponsiveButton
                 icon={<ExitToApp />}
                 label="Logout"
