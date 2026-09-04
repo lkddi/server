@@ -12,6 +12,11 @@ import ExitToApp from '@mui/icons-material/ExitToApp';
 import MenuIcon from '@mui/icons-material/Menu';
 import Apps from '@mui/icons-material/Apps';
 import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
+import SettingsIcon from '@mui/icons-material/Settings';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import React, {CSSProperties} from 'react';
 import {Link} from 'react-router';
 import {useMediaQuery} from '@mui/material';
@@ -116,6 +121,8 @@ const Buttons = ({
     setNavOpen: (open: boolean) => void;
 }) => {
     const {classes} = useStyles();
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const userDropDown = Boolean(anchorEl);
 
     return (
         <div className={classes.menuButtons}>
@@ -140,16 +147,41 @@ const Buttons = ({
             <Link className={classes.link} to="/plugins" id="navigate-plugins">
                 <ResponsiveButton icon={<Apps />} label="plugins" color="inherit" />
             </Link>
-            <Link className={classes.link} to="/settings" id="navigate-settings">
-                <ResponsiveButton icon={<AccountCircle />} label={name} color="inherit" />
-            </Link>
             <ResponsiveButton
-                icon={<ExitToApp />}
-                label="Logout"
-                onClick={logout}
-                id="logout"
+                icon={<AccountCircle />}
+                label={name}
+                onClick={(e) => setAnchorEl(e.currentTarget)}
+                id="user-menu-button"
+                aria-controls={userDropDown ? 'user-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={userDropDown ? 'true' : undefined}
                 color="inherit"
             />
+            <Menu
+                id="user-menu"
+                anchorEl={anchorEl}
+                open={userDropDown}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                transformOrigin={{vertical: 'top', horizontal: 'right'}}>
+                <MenuItem component={Link} to="/settings" onClick={() => setAnchorEl(null)}>
+                    <ListItemIcon>
+                        <SettingsIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Settings</ListItemText>
+                </MenuItem>
+                <MenuItem
+                    id="logout"
+                    onClick={() => {
+                        setAnchorEl(null);
+                        logout();
+                    }}>
+                    <ListItemIcon>
+                        <ExitToApp fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Logout</ListItemText>
+                </MenuItem>
+            </Menu>
         </div>
     );
 };
@@ -159,7 +191,7 @@ const ResponsiveButton: React.FC<{
     sx?: ButtonProps['sx'];
     label: string;
     id?: string;
-    onClick?: () => void;
+    onClick?: (event: React.MouseEvent<HTMLElement>) => void;
     icon: React.ReactNode;
 }> = ({icon, label, ...rest}) => {
     const matches = useMediaQuery('(max-width:1000px)');

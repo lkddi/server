@@ -31,7 +31,6 @@ const loginWithOIDC = async (page: Page, user: DexUser): Promise<void> => {
 
 const expectLoggedIn = async (page: Page): Promise<void> => {
     await waitForExists(page, selector.heading(), 'All Messages');
-    await page.waitForSelector('#logout');
 };
 
 const oidcError = async (page: Page): Promise<string> => {
