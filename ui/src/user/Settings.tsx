@@ -22,15 +22,6 @@ interface IProps {
 }
 
 const Settings = observer(({themeMode, setTheme}: IProps) => {
-    const [pass, setPass] = useState('');
-    const {currentUser, elevateStore} = useStores();
-    const localAuthEnabled = config.get('localAuth');
-
-    const submit = () => {
-        currentUser.changePassword(pass);
-        setPass('');
-    };
-
     return (
         <DefaultPage title="Settings" maxWidth={400}>
             <Grid size={{xs: 12}}>
@@ -54,54 +45,67 @@ const Settings = observer(({themeMode, setTheme}: IProps) => {
                 </Paper>
             </Grid>
             <Grid size={{xs: 12}}>
-                <Paper elevation={6} sx={{padding: 2}} id="changepw-form">
+                <Paper elevation={6} sx={{padding: 2}}>
                     <Typography variant="h6" sx={{marginBottom: 2}}>
                         Change Password
                     </Typography>
-                    {localAuthEnabled && !elevateStore.elevated ? (
-                        <ElevationForm />
-                    ) : (
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                submit();
-                            }}>
-                            <TextField
-                                className="newpass"
-                                margin="dense"
-                                type="password"
-                                label="New Password *"
-                                value={pass}
-                                disabled={!localAuthEnabled}
-                                onChange={(e) => setPass(e.target.value)}
-                                fullWidth
-                            />
-                            <Tooltip
-                                title={
-                                    !localAuthEnabled
-                                        ? 'Password login is disabled on this server.'
-                                        : pass.length !== 0
-                                          ? ''
-                                          : 'Password is required'
-                                }>
-                                <div>
-                                    <Button
-                                        className="change"
-                                        type="submit"
-                                        disabled={!localAuthEnabled || pass.length === 0}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth>
-                                        Change
-                                    </Button>
-                                </div>
-                            </Tooltip>
-                        </form>
-                    )}
+                    <ChangePasswordForm />
                 </Paper>
             </Grid>
         </DefaultPage>
     );
 });
+
+const ChangePasswordForm = () => {
+    const [pass, setPass] = useState('');
+    const {currentUser, elevateStore} = useStores();
+    const localAuthEnabled = config.get('localAuth');
+
+    const submit = () => {
+        currentUser.changePassword(pass);
+        setPass('');
+    };
+
+    if (!localAuthEnabled) {
+        return <Typography>Password login is disabled on this server.</Typography>;
+    }
+
+    if (!elevateStore.elevated) {
+        return <ElevationForm />;
+    }
+
+    return (
+        <form
+            id="changepw-form"
+            onSubmit={(e) => {
+                e.preventDefault();
+                submit();
+            }}>
+            <TextField
+                className="newpass"
+                margin="dense"
+                type="password"
+                label="New Password *"
+                value={pass}
+                disabled={!localAuthEnabled}
+                onChange={(e) => setPass(e.target.value)}
+                fullWidth
+            />
+            <Tooltip title={pass.length !== 0 ? '' : 'Password is required'}>
+                <div>
+                    <Button
+                        className="change"
+                        type="submit"
+                        disabled={!localAuthEnabled || pass.length === 0}
+                        color="primary"
+                        variant="contained"
+                        fullWidth>
+                        Change
+                    </Button>
+                </div>
+            </Tooltip>
+        </form>
+    );
+};
 
 export default Settings;
