@@ -9,23 +9,12 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Chat from '@mui/icons-material/Chat';
 import DevicesOther from '@mui/icons-material/DevicesOther';
 import ExitToApp from '@mui/icons-material/ExitToApp';
-import Brightness4 from '@mui/icons-material/Brightness4';
-import Brightness7 from '@mui/icons-material/Brightness7';
-import BrightnessAuto from '@mui/icons-material/BrightnessAuto';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import MenuIcon from '@mui/icons-material/Menu';
 import Apps from '@mui/icons-material/Apps';
 import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
 import React, {CSSProperties} from 'react';
 import {Link} from 'react-router';
 import {useMediaQuery} from '@mui/material';
-import {ThemeKey} from './theme';
-
-const themeIcons: Record<ThemeKey, React.ReactElement> = {
-    dark: <Brightness4 />,
-    light: <Brightness7 />,
-    system: <BrightnessAuto />,
-};
 
 const useStyles = makeStyles()((theme: Theme) => ({
     appBar: {
@@ -76,27 +65,13 @@ interface IProps {
     name: string;
     admin: boolean;
     version: string;
-    themeMode: ThemeKey;
-    toggleTheme: VoidFunction;
     logout: VoidFunction;
     style: CSSProperties;
     setNavOpen: (open: boolean) => void;
 }
 
-const Header = ({
-    version,
-    name,
-    loggedIn,
-    admin,
-    toggleTheme,
-    logout,
-    style,
-    setNavOpen,
-    themeMode,
-}: IProps) => {
+const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IProps) => {
     const {classes} = useStyles();
-    const themeLabel = `Toggle theme (current: ${themeMode})`;
-    const themeIcon = themeIcons[themeMode];
     return (
         <AppBar
             sx={{position: {xs: 'sticky', sm: 'fixed'}}}
@@ -124,26 +99,6 @@ const Header = ({
                 {loggedIn && (
                     <Buttons admin={admin} name={name} logout={logout} setNavOpen={setNavOpen} />
                 )}
-                <div>
-                    <IconButton
-                        onClick={toggleTheme}
-                        color="inherit"
-                        size="large"
-                        title={themeLabel}
-                        aria-label={themeLabel}>
-                        {themeIcon}
-                    </IconButton>
-
-                    <a
-                        href="https://github.com/gotify/server"
-                        className={classes.link}
-                        target="_blank"
-                        rel="noopener noreferrer">
-                        <IconButton color="inherit" size="large">
-                            <GitHubIcon />
-                        </IconButton>
-                    </a>
-                </div>
             </Toolbar>
         </AppBar>
     );

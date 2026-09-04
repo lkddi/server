@@ -82,15 +82,6 @@ const Layout = observer(() => {
         localStorage.setItem(localStorageThemeKey, next);
     };
 
-    const toggleTheme = () => {
-        const nextMap: Record<ThemeKey, ThemeKey> = {
-            dark: 'light',
-            light: 'system',
-            system: 'dark',
-        };
-        setTheme(nextMap[currentTheme]);
-    };
-
     const authed = (children: React.ReactNode) => (
         <RequireAuth loggedIn={loggedIn} authenticating={authenticating}>
             {children}
@@ -121,8 +112,6 @@ const Layout = observer(() => {
                                 style={{top: !connectionErrorMessage ? 0 : 64}}
                                 version={version}
                                 loggedIn={loggedIn}
-                                themeMode={currentTheme}
-                                toggleTheme={toggleTheme}
                                 logout={logout}
                                 setNavOpen={setNavOpen}
                             />
