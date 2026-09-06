@@ -34,7 +34,7 @@
     "remove-markdown": "^0.6.2",
     "tss-react": "^4.9.19",
     "vite": "^8.0.8",
-    "vitest": "^4.0.0"
+    "vitest": "^5.0.0"
   },
   "scripts": {
     "start": "vite",
