@@ -1,6 +1,6 @@
 import {Page} from 'puppeteer';
 import {newTest, GotifyTest} from './setup';
-import {clearField, count, innerText, waitForExists, waitToDisappear} from './utils';
+import {clearField, clickByText, count, innerText, waitForExists, waitToDisappear} from './utils';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 import * as auth from './authentication';
 import * as selector from './selector';
@@ -120,8 +120,12 @@ describe('User', () => {
         expect(await count(page, $table.rows())).toBe(3);
     });
     it('changes password of current user', async () => {
-        const $changepw = selector.form('#changepw-dialog');
-        await page.click('#changepw');
+        const $changepw = selector.form('#changepw-form');
+        await page.waitForSelector('#user-menu-button');
+        await page.click('#user-menu-button');
+        await clickByText(page, 'a', 'Settings');
+        await waitToDisappear(page, '.MuiBackdrop-root');
+        await waitForExists(page, selector.heading(), 'Settings');
         await page.waitForSelector($changepw.selector());
         await page.type($changepw.input('.newpass'), 'changed');
         await page.click($changepw.button('.change'));

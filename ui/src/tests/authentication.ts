@@ -12,10 +12,12 @@ export const login = async (page: Page, user = 'admin', pass = 'admin'): Promise
     await page.type($loginForm.input('.password'), pass);
     await page.click($loginForm.button('.login'));
     await waitForExists(page, selector.heading(), 'All Messages');
-    await waitForExists(page, 'button', 'logout');
 };
 
 export const logout = async (page: Page): Promise<void> => {
+    await page.waitForSelector('#user-menu-button');
+    await page.click('#user-menu-button');
+    await page.waitForSelector('#logout');
     await page.click('#logout');
     await waitForExists(page, selector.heading(), 'Login');
     expect(page.url()).toContain('/login');
